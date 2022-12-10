@@ -6,19 +6,31 @@ import socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 server_address = ('localhost', 10000)
-message = 'This is the message.  It will be repeated.'
+# message = 'This is the message.  It will be repeated.'
 
-try:
-    # Send data
-    print('sending "%s"' % message)
-    sent = sock.sendto(message.encode(), server_address)
+# try:
+#     # Send data
+#     print('sending "%s"' % message)
+#     sent = sock.sendto(message.encode(), server_address)
 
-    # Receive response
-    print('waiting to receive')
-    data, server = sock.recvfrom(4096)
-    print('received "%s"' % data)
+#     # Receive response
+#     print('waiting to receive')
+#     data, server = sock.recvfrom(4096)
+#     print('received "%s"' % data)
 
-finally:
-    print('closing socket')
-    sock.close()
+# finally:
+#     print('closing socket')
+#     sock.close()
+    
+def repl():
+    while True:
+        message = input('Enter message: ')
+        if message == 'quit':
+            break
+        sent = sock.sendto(message.encode(), server_address)
+        data, server = sock.recvfrom(4096)
+        print('received "%s"' % data)
+
+if __name__ == '__main__':
+    repl()
     
