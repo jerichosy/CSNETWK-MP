@@ -1,5 +1,6 @@
 # Implement a UDP server
 
+import json
 import socket
 
 # Create a UDP socket
@@ -10,6 +11,8 @@ SERVER_ADDRESS = ('localhost', 10000)
 print('starting up on %s port %s' % SERVER_ADDRESS)
 server.bind(SERVER_ADDRESS)
 
+clients = []
+
 while True:
 	print('waiting to receive message')
 	data, address = server.recvfrom(1024)
@@ -18,6 +21,15 @@ while True:
 	print(data)
 	
     # Responses to commands
-	# if data:
+	try:
+		data_json = json.loads(data.decode())
+	except json.decoder.JSONDecodeError:  # Will also catch empty string (bytes)
+		print('Error: Invalid JSON')
+		continue
+	# Every valid JSON input should have a 'command' key. We will not check for its presence.
+	else:
+		if data_json['command'] == 'join':
+			clients.append(address)
+			print('clients:', clients)
 	# 	sent = server.sendto(data, address)
 	# 	print('sent %s bytes back to %s' % (sent, address))
