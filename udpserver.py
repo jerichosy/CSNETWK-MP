@@ -49,5 +49,7 @@ while True:
 				print('Error: Invalid handle')
 				continue
 
-			server.sendto(f"[From {source_handle}]: {data_json['message']}".encode(), destination_addr)
-
+			# send in json
+			data_json.update({'handle': source_handle})
+			response = json.dumps(data_json)
+			server.sendto(response.encode(), destination_addr)

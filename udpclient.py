@@ -52,7 +52,7 @@ class MBSClientShell(Cmd):
             return
 
         # Command specific error checking
-        if self.server_address:  # TODO: Not sure if this is meant to be a client-side check
+        if self.server_address:  # FIXME: CONSIDER MOVING TO SERVER
             print("Error: Already connected to server")
             return            
         
@@ -79,11 +79,11 @@ class MBSClientShell(Cmd):
             return
 
         # Command specific error checking
-        if not self.server_address:
+        if not self.server_address:  # FIXME: CONSIDER MOVING TO SERVER
             print("Error: Not connected to server. Use '/join <ip> <port>'")
             return
 
-        if self.handle:
+        if self.handle:  # FIXME: CONSIDER MOVING TO SERVER
             print("Error: Already registered")
             return
 
@@ -105,11 +105,12 @@ class MBSClientShell(Cmd):
             return
 
         # Command specific error checking
-        if not self.server_address:  # This being the 2nd error check is okay
+        if not self.server_address:  # FIXME: CONSIDER MOVING TO SERVER 
+            # This being the 2nd error check is okay
             print("Error: Not connected to server. Use '/join <ip> <port>'")
             return
 
-        if not self.handle:
+        if not self.handle:  # FIXME: CONSIDER MOVING TO SERVER 
             print("Error: Not registered. Use '/register <handle>'")
             return
 
@@ -143,7 +144,22 @@ def receive():
         data, address = client.recvfrom(1024)
         
         # print('received %s bytes from %s' % (len(data), address))
-        print(data.decode())
+        # print(data.decode())
+
+        # Expect JSON
+        response = json.loads(data.decode())
+        # print(response)
+
+        # If error received, print it and continue
+        error = response.get('error')
+        if error:
+            print(f"Error: {error}")
+            continue
+            
+        # Other types of response depending on the command
+        if response['command'] == 'msg':
+            print(f"[From {response['handle']}]: {response['message']}")
+
  
 t = threading.Thread(target=receive)
 t.start()
