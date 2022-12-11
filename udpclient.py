@@ -44,6 +44,8 @@ class MBSClientShell(Cmd):
             # Process receive chain of the commands
             if response['command'] == 'msg':
                 print(f"[From {response['handle']}]: {response['message']}")
+            elif response['command'] == 'all':
+                print(f"{response['handle']}: {response['message']}")
 
     def validate_command(self, command_args: str, required_arg_count: int) -> bool:
         split = command_args.split(maxsplit=1)
@@ -141,6 +143,28 @@ class MBSClientShell(Cmd):
         request = json.dumps({'command': 'msg', 'handle': dest_handle, 'message': message})
         client.sendto(request.encode(), self.server_address)
         # print(f"[To {dest_handle}]: {message}")  # handled in receive() thread
+
+    def do_all(self, arg: str) -> None:
+        # Basic error checking
+        args = self.validate_command(arg, 1)
+        if not args:
+            return
+
+        # Command specific error checking
+        if not self.server_address:  # FIXME: CONSIDER MOVING TO SERVER 
+            # This being the 2nd error check is okay
+            print("Error: Not connected to server. Use '/join <ip> <port>'")
+            return
+
+        if not self.handle:  # FIXME: CONSIDER MOVING TO SERVER 
+            print("Error: Not registered. Use '/register <handle>'")
+            return
+
+        message = args[0]          
+
+        # Send data
+        request = json.dumps({'command': 'all', 'message': message})
+        client.sendto(request.encode(), self.server_address)
 
     # Do not remove this command
     # def do_test(self, arg: str) -> None:
