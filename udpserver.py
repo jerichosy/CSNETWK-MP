@@ -32,6 +32,8 @@ while True:
 		continue
 	# Every valid JSON input should have a 'command' key. We will not check for its presence.
 	else:
+		# Note: Do not specify command syntax in error messages. The server doesn't know how the client parses commands.
+
 		if data_json['command'] == 'join':
 			clients.update({address: None})
 			print('clients:', clients)
