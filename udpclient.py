@@ -119,7 +119,7 @@ class MBSClientShell(Cmd):
         # Send data
         request = json.dumps({'command': 'msg', 'handle': dest_handle, 'message': message})
         client.sendto(request.encode(), self.server_address)
-        print(f"[To {dest_handle}]: {message}")
+        # print(f"[To {dest_handle}]: {message}")  # handled in receive() thread
 
     # Do not remove this command
     # def do_test(self, arg: str) -> None:
@@ -151,12 +151,15 @@ def receive():
         # print(response)
 
         # If error received, print it and continue
-        error = response.get('error')
+        error, info = response.get('error'), response.get('info')
         if error:
             print(f"Error: {error}")
             continue
+        if info:
+            print(info)
+            continue
             
-        # Other types of response depending on the command
+        # Process receive chain of the commands
         if response['command'] == 'msg':
             print(f"[From {response['handle']}]: {response['message']}")
 
