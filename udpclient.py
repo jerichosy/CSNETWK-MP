@@ -78,6 +78,8 @@ class MBSClientShell(Cmd):
         pass
     
     def do_join(self, arg: str) -> None:
+        """    Join a Message Board Server\n    Syntax: /join <ip> <port>"""
+
         # Basic error checking
         args = self.validate_command(arg, 2)
         if not args:
@@ -114,6 +116,8 @@ class MBSClientShell(Cmd):
         t.start()
 
     def do_leave(self, arg: None) -> None:
+        """    Leave the Message Board Server\n    Syntax: /leave"""
+
         # Command specific error checking
         if not self.server_address:
             print("Error: Not connected to a server.")
@@ -126,6 +130,8 @@ class MBSClientShell(Cmd):
         self.server_address = ()
 
     def do_register(self, arg: str) -> None:
+        """    Register a handle with the Message Board Server\n    Syntax: /register <handle>"""
+
         # Basic error checking
         if not arg:
             print("Error: No handle/alias passed in command")
@@ -141,6 +147,8 @@ class MBSClientShell(Cmd):
         client.sendto(request.encode(), self.server_address)
 
     def do_msg(self, arg: str) -> None:
+        """    Send a message to a specific handle\n    Syntax: /msg <handle> <message>"""
+
         # Basic error checking
         args = self.validate_command(arg, 2)
         if not args:
@@ -160,6 +168,8 @@ class MBSClientShell(Cmd):
         # print(f"[To {dest_handle}]: {message}")  # handled in receive() thread
 
     def do_all(self, arg: str) -> None:
+        """    Send a message to all clients (incl. unregistered ones)\n    Syntax: /all <message>"""
+
         # Basic error checking
         if not arg:
             print("Error: No message passed in command")
