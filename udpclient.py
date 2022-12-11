@@ -128,6 +128,8 @@ class MBSClientShell(Cmd):
 
         self.server_address = ()
 
+        # TODO: Stop the thread
+
     def do_register(self, arg: str) -> None:
         """    Register a handle with the Message Board Server\n    Syntax: /register <handle>"""
 
