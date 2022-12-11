@@ -26,7 +26,7 @@ def broadcast():
             for client in clients:
                 try:
                     if message.decode().startswith("SIGNUP_TAG:"):
-                        name = message.decode()[message.decode().index(":")+1]
+                        name = message.decode()[message.decode().index(":")+1:]
                         server.sendto(f"{name} joined!".encode(), client)
                     else:
                         server.sendto(message, client)
