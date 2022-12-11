@@ -16,7 +16,6 @@ class MBSClientShell(Cmd):
     intro = '\nWelcome to the CSNETWK Message Board System.\nType /help or /? to list commands.\n\nTo exit the program, enter /quit.\n'
     
     server_address = ()
-    handle = ''
 
     def validate_command(self, command_args: str, required_arg_count: int) -> bool:
         split = command_args.split(maxsplit=1)
@@ -83,20 +82,12 @@ class MBSClientShell(Cmd):
             print("Error: Not connected to server. Use '/join <ip> <port>'")
             return
 
-        # if self.handle:  # FIXME: CONSIDER MOVING TO SERVER
-        #     print("Error: Already registered")
-        #     return
-
-        self.handle = arg
-
         # Send data
-        request = json.dumps({'command': 'register', 'handle': self.handle})
+        request = json.dumps({'command': 'register', 'handle': arg})
         client.sendto(request.encode(), self.server_address)
 
         # TODO: Handle duplicate checking (either re-prompt or auto-generate new handle)
         # response = client.recvfrom(1024)
-
-        # print(f"Welcome {self.handle}!")
 
     def do_msg(self, arg: str) -> None:
         # Basic error checking
@@ -109,10 +100,6 @@ class MBSClientShell(Cmd):
             # This being the 2nd error check is okay
             print("Error: Not connected to server. Use '/join <ip> <port>'")
             return
-
-        # if not self.handle:  # FIXME: CONSIDER MOVING TO SERVER 
-        #     print("Error: Not registered. Use '/register <handle>'")
-        #     return
 
         dest_handle, message = args[0], args[1]            
 
