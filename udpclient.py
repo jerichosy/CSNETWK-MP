@@ -148,8 +148,8 @@ class MBSClientShell(Cmd):
 
     def do_all(self, arg: str) -> None:
         # Basic error checking
-        args = self.validate_command(arg, 1)
-        if not args:
+        if not arg:
+            print("Error: No message passed in command")
             return
 
         # Command specific error checking
@@ -158,7 +158,7 @@ class MBSClientShell(Cmd):
             print("Error: Not connected to server. Use '/join <ip> <port>'")
             return
 
-        message = args[0]          
+        message = arg   
 
         # Send data
         request = json.dumps({'command': 'all', 'message': message})
