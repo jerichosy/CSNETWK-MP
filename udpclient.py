@@ -96,7 +96,7 @@ class MBSClientShell(Cmd):
         # TODO: Handle duplicate checking (either re-prompt or auto-generate new handle)
         # response = client.recvfrom(1024)
 
-        print(f"Welcome {self.handle}!")
+        # print(f"Welcome {self.handle}!")
 
     def do_msg(self, arg: str) -> None:
         # Basic error checking

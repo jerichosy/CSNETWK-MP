@@ -37,8 +37,23 @@ while True:
 			print('clients:', clients)
 
 		elif data_json['command'] == 'register':
-			clients.update({address: data_json['handle']})
+			handle = data_json['handle']
+
+			# check if handle already exists
+			if handle in clients.values():
+				print('Error: Handle already exists')
+				# inform sender of error
+				response = json.dumps({'error': 'Registration failed. Handle or alias already exists.'})
+				server.sendto(response.encode(), address)
+				continue
+
+			# update clients
+			clients.update({address: handle})
 			print('clients:', clients)
+
+			# inform sender of success
+			response = json.dumps({'info': f"Welcome {handle}!"})
+			server.sendto(response.encode(), address)
 
 		elif data_json['command'] == 'msg':
 			destination_handle = data_json['handle']
