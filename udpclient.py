@@ -12,10 +12,10 @@ client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 client.bind(('localhost', random.randint(8000, 9000)))
 
 class MBSClientShell(Cmd):
-    prompt = '(MBS Client) '
+    prompt = ''
+    intro = 'Welcome to the CSNETWK Message Board System.\nType /help or /? to list commands.\n'
     
     server_address = ()
-
     handle = ''
 
     def validate_command(self, command_args: str, required_arg_count: int) -> bool:
@@ -111,12 +111,14 @@ class MBSClientShell(Cmd):
 
         if not self.handle:
             print("Error: Not registered. Use '/register <handle>'")
-            return            
+            return
+
+        dest_handle, message = args[0], args[1]            
 
         # Send data
-        request = json.dumps({'command': 'msg', 'handle': args[0], 'message': args[1]})
+        request = json.dumps({'command': 'msg', 'handle': dest_handle, 'message': message})
         client.sendto(request.encode(), self.server_address)
-        print(f"[{self.handle}]: {arg[1]}")
+        print(f"[To {dest_handle}]: {message}")
 
     # Do not remove this command
     # def do_test(self, arg: str) -> None:
@@ -137,10 +139,10 @@ class MBSClientShell(Cmd):
 # That's because recvfrom() is blocking. If we run it in the main thread, the program will not be able to accept user input.
 def receive():
     while True:
-        print('waiting to receive message')
+        # print('waiting to receive message')
         data, address = client.recvfrom(1024)
         
-        print('received %s bytes from %s' % (len(data), address))
+        # print('received %s bytes from %s' % (len(data), address))
         print(data.decode())
  
 t = threading.Thread(target=receive)
