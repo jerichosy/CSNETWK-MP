@@ -35,13 +35,12 @@ class MBSClientShell(Cmd):
             response = json.loads(data.decode())
             # print(response)
 
-            # If error received, print it and continue
-            error, info = response.get('error'), response.get('info')
-            if error:
-                print(f"Error: {error}")
+            # Error and information
+            if response['command'] == 'error':
+                print(f"Error: {response['message']}")
                 continue
-            if info:
-                print(info)
+            if response['command'] == 'info':
+                print(response['message'])
                 continue
                 
             # Process receive chain of the commands
@@ -109,7 +108,7 @@ class MBSClientShell(Cmd):
         # print('Connection to the Message Board Server is successful!')
 
         response = json.loads(data.decode())
-        info = response.get('info')
+        info = response.get('message')
         print(info)
 
         t = threading.Thread(target=self._receive)

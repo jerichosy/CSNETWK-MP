@@ -40,7 +40,7 @@ while True:
 			print('clients:', clients)
 
 			# inform sender of success
-			response = json.dumps({'info': 'Connection to the Message Board Server is successful! Please register.'})
+			response = json.dumps({'command': 'info', 'message': 'Connection to the Message Board Server is successful! Please register.'})
 			server.sendto(response.encode(), address)
 
 		elif data_json['command'] == 'leave':
@@ -49,7 +49,7 @@ while True:
 			print('clients:', clients)
 
 			# inform sender of success
-			response = json.dumps({'info': 'You have left the Message Board Server.'})
+			response = json.dumps({'command': 'info', 'message': 'You have left the Message Board Server.'})
 			server.sendto(response.encode(), address)
 
 		elif data_json['command'] == 'register':
@@ -58,7 +58,7 @@ while True:
 			if clients.get(address) is not None:
 				print('Error: Already registered')
 				# inform sender of error
-				response = json.dumps({'error': 'Already registered.'})
+				response = json.dumps({'command': 'error', 'message': 'Already registered.'})
 				server.sendto(response.encode(), address)
 				continue
 
@@ -66,7 +66,7 @@ while True:
 			if handle in clients.values():
 				print('Error: Handle already exists')
 				# inform sender of error
-				response = json.dumps({'error': 'Registration failed. Handle is taken.'})
+				response = json.dumps({'command': 'error', 'message': 'Registration failed. Handle is taken.'})
 				server.sendto(response.encode(), address)
 				continue
 
@@ -75,7 +75,7 @@ while True:
 			print('clients:', clients)
 
 			# inform sender of success
-			response = json.dumps({'info': f"Welcome {handle}!"})
+			response = json.dumps({'command': 'info', 'message': f"Welcome {handle}!"})
 			server.sendto(response.encode(), address)
 
 		# below this line, handle must be registered
@@ -83,7 +83,7 @@ while True:
 		elif clients.get(address) is None:
 			print('Error: Not registered')
 			# inform sender of error
-			response = json.dumps({'error': 'Not registered.'})
+			response = json.dumps({'command': 'error', 'message': 'Not registered.'})
 			server.sendto(response.encode(), address)
 			continue
 
@@ -104,7 +104,7 @@ while True:
 			if not destination_addr:
 				print('Error: Invalid handle')
 				# inform sender of error
-				response = json.dumps({'error': 'Handle not found'})
+				response = json.dumps({'command': 'error', 'message': 'Handle not found'})
 				server.sendto(response.encode(), address)
 				continue
 
@@ -114,7 +114,7 @@ while True:
 			server.sendto(response.encode(), destination_addr)
 
 			# inform sender of success
-			response = json.dumps({'info': f"[To {destination_handle}]: {data_json['message']}"})
+			response = json.dumps({'command': 'info', 'message': f"[To {destination_handle}]: {data_json['message']}"})
 			server.sendto(response.encode(), address)
 			
 		elif data_json['command'] == 'all':
