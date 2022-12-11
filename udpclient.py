@@ -187,6 +187,17 @@ class MBSClientShell(Cmd):
         request = json.dumps({'command': 'all', 'message': message})
         client.sendto(request.encode(), self.server_address)
 
+    def do_help(self, arg: str) -> bool | None:
+        if not arg:
+            names = self.get_names()
+            names.sort()
+            for name in names:
+                if name[:3] == 'do_':
+                    if getattr(self, name).__doc__:
+                        print(f"\n{name[3:]}\n{getattr(self, name).__doc__}")
+            print()
+        else:
+            return super().do_help(arg)
 
     # This is necessary because CTRL+C will not interrupt recvfrom() at least on Windows.
     def do_quit(self, arg: None) -> None:  # This is necessary 
