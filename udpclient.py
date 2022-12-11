@@ -33,6 +33,10 @@ class MBSClientShell(Cmd):
             return
 
         # Command specific error checking
+        if self.server_address:  # TODO: Not sure if this is meant to be a client-side check
+            print("Error: Already connected to server")
+            return            
+        
         try:
             self.server_address = (args[0], int(args[1]))
         except ValueError:
