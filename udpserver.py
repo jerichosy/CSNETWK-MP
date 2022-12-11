@@ -120,7 +120,7 @@ while True:
 			data_json.update({'handle': source_handle})
 			response = json.dumps(data_json)
 			response = response.encode() #pre-encode response
-			for client_address in clients.values():
+			for client_address in clients:
 				server.sendto(response, client_address)
 
 			# sender was already informed of success in the above loop
