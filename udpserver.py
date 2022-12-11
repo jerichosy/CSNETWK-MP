@@ -41,15 +41,26 @@ while True:
 			print('clients:', clients)
 
 		elif data_json['command'] == 'msg':
-			destination_addr = clients.get(data_json['handle'])
+			destination_handle = data_json['handle']
+			print('destination_handle:', destination_handle)
+			destination_addr = clients.get(destination_handle)
 			print('destination_addr:', destination_addr)
 			source_handle = list(clients.keys())[list(clients.values()).index(address)]
 			print('source_handle:', source_handle)
+
+			# error check if handle exists
 			if not destination_addr:
 				print('Error: Invalid handle')
+				# inform sender of error
+				response = json.dumps({'error': 'Handle not found'})
+				server.sendto(response.encode(), address)
 				continue
 
-			# send in json
+			# change handle to source handle and send to destination
 			data_json.update({'handle': source_handle})
 			response = json.dumps(data_json)
 			server.sendto(response.encode(), destination_addr)
+
+			# inform sender of success
+			response = json.dumps({'info': f"[To {destination_handle}]: {data_json['message']}"}) #FIXME:
+			server.sendto(response.encode(), address)
