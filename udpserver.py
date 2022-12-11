@@ -39,6 +39,13 @@ while True:
 		elif data_json['command'] == 'register':
 			handle = data_json['handle']
 
+			if clients.get(address) is not None:
+				print('Error: Already registered')
+				# inform sender of error
+				response = json.dumps({'error': 'Already registered.'})
+				server.sendto(response.encode(), address)
+				continue
+
 			# check if handle already exists
 			if handle in clients.values():
 				print('Error: Handle already exists')

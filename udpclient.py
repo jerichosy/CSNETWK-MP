@@ -83,9 +83,9 @@ class MBSClientShell(Cmd):
             print("Error: Not connected to server. Use '/join <ip> <port>'")
             return
 
-        if self.handle:  # FIXME: CONSIDER MOVING TO SERVER
-            print("Error: Already registered")
-            return
+        # if self.handle:  # FIXME: CONSIDER MOVING TO SERVER
+        #     print("Error: Already registered")
+        #     return
 
         self.handle = arg
 
