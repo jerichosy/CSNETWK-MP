@@ -27,6 +27,8 @@ class MBSClientShell(Cmd):
         pass
     
     def do_join(self, arg: str) -> None:
+        # TODO: This does not check whether the dest. address is valid.
+
         # Basic error checking
         args = validate_command(arg, 2)
         if not args:
