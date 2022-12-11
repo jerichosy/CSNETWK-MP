@@ -11,7 +11,7 @@ SERVER_ADDRESS = ('localhost', 9999)
 print('starting up on %s port %s' % SERVER_ADDRESS)
 server.bind(SERVER_ADDRESS)
 
-clients = []
+clients = {}  # {handle: address}
 
 while True:
 	print('waiting to receive message')
@@ -20,6 +20,10 @@ while True:
 	print('received %s bytes from %s' % (len(data), address))
 	print(data)
 	
+	# TODO: comment out after done debugging client
+	# sent = server.sendto(data, address)
+	# print('sent %s bytes back to %s' % (sent, address))
+
     # Responses to commands
 	try:
 		data_json = json.loads(data.decode())
@@ -29,7 +33,21 @@ while True:
 	# Every valid JSON input should have a 'command' key. We will not check for its presence.
 	else:
 		if data_json['command'] == 'join':
-			clients.append(address)
+			# TODO: Not really sure if we're supposed to do anything here
+			pass
+
+		elif data_json['command'] == 'register':
+			clients.update({data_json['handle']: address})
 			print('clients:', clients)
-	# 	sent = server.sendto(data, address)
-	# 	print('sent %s bytes back to %s' % (sent, address))
+
+		elif data_json['command'] == 'msg':
+			destination_addr = clients.get(data_json['handle'])
+			print('destination_addr:', destination_addr)
+			source_handle = list(clients.keys())[list(clients.values()).index(address)]
+			print('source_handle:', source_handle)
+			if not destination_addr:
+				print('Error: Invalid handle')
+				continue
+
+			server.sendto(f"[From {source_handle}]: {data.decode()}".encode(), destination_addr)
+
