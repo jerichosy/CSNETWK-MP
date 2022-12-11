@@ -43,7 +43,7 @@ while True:
 			if handle in clients.values():
 				print('Error: Handle already exists')
 				# inform sender of error
-				response = json.dumps({'error': 'Registration failed. Handle or alias already exists.'})
+				response = json.dumps({'error': 'Registration failed. Handle is taken.'})
 				server.sendto(response.encode(), address)
 				continue
 
