@@ -62,6 +62,15 @@ while True:
 			response = json.dumps({'info': f"Welcome {handle}!"})
 			server.sendto(response.encode(), address)
 
+		# below this line, handle must be registered
+		# error check if not registered
+		elif clients.get(address) is None:
+			print('Error: Not registered')
+			# inform sender of error
+			response = json.dumps({'error': 'Not registered.'})
+			server.sendto(response.encode(), address)
+			continue
+
 		elif data_json['command'] == 'msg':
 			destination_handle = data_json['handle']
 			print('destination_handle:', destination_handle)

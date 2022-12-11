@@ -110,9 +110,9 @@ class MBSClientShell(Cmd):
             print("Error: Not connected to server. Use '/join <ip> <port>'")
             return
 
-        if not self.handle:  # FIXME: CONSIDER MOVING TO SERVER 
-            print("Error: Not registered. Use '/register <handle>'")
-            return
+        # if not self.handle:  # FIXME: CONSIDER MOVING TO SERVER 
+        #     print("Error: Not registered. Use '/register <handle>'")
+        #     return
 
         dest_handle, message = args[0], args[1]            
 
