@@ -109,12 +109,14 @@ while True:
 			
 		elif data_json['command'] == 'all':
 			print('destination_addr:', "ALL")
-			source_handle = list(clients.keys())[list(clients.values()).index(address)]
+			source_handle = clients.get(address)
 			print('source_handle:', source_handle)
 
-			# send message to all clients in json
+			# change handle to source handle and send to All destinations
 			data_json.update({'handle': source_handle})
 			response = json.dumps(data_json)
 			response = response.encode() #pre-encode response
 			for client_address in clients.values():
 				server.sendto(response, client_address)
+
+			# sender was already informed of success in the above loop

@@ -151,13 +151,9 @@ class MBSClientShell(Cmd):
             return
 
         # Command specific error checking
-        if not self.server_address:  # FIXME: CONSIDER MOVING TO SERVER 
+        if not self.server_address:
             # This being the 2nd error check is okay
             print("Error: Not connected to server. Use '/join <ip> <port>'")
-            return
-
-        if not self.handle:  # FIXME: CONSIDER MOVING TO SERVER 
-            print("Error: Not registered. Use '/register <handle>'")
             return
 
         message = args[0]          
