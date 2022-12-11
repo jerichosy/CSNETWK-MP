@@ -112,6 +112,18 @@ class MBSClientShell(Cmd):
         t = threading.Thread(target=self._receive)
         t.start()
 
+    def do_leave(self, arg: None) -> None:
+        # Command specific error checking
+        if not self.server_address:
+            print("Error: Not connected to a server.")
+            return
+
+        # Send data
+        request = json.dumps({'command': 'leave'})
+        client.sendto(request.encode(), self.server_address)
+
+        self.server_address = ()
+
     def do_register(self, arg: str) -> None:
         # Basic error checking
         if not arg:

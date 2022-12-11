@@ -35,11 +35,21 @@ while True:
 		# Note: Do not specify command syntax in error messages. The server doesn't know how the client parses commands.
 
 		if data_json['command'] == 'join':
+			# update clients
 			clients.update({address: None})
 			print('clients:', clients)
 
 			# inform sender of success
 			response = json.dumps({'info': 'Connection to the Message Board Server is successful! Please register.'})
+			server.sendto(response.encode(), address)
+
+		elif data_json['command'] == 'leave':
+			# update clients
+			clients.pop(address)  # will remove regardless of whether handle is registered
+			print('clients:', clients)
+
+			# inform sender of success
+			response = json.dumps({'info': 'You have left the Message Board Server.'})
 			server.sendto(response.encode(), address)
 
 		elif data_json['command'] == 'register':
