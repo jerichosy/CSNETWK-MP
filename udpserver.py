@@ -72,6 +72,8 @@ while True:
 			continue
 
 		elif data_json['command'] == 'msg':
+			# Note: Allow the sender to send a message to themselves
+
 			destination_handle = data_json['handle']
 			print('destination_handle:', destination_handle)
 			try:
