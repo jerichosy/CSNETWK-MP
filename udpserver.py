@@ -33,8 +33,8 @@ while True:
 	# Every valid JSON input should have a 'command' key. We will not check for its presence.
 	else:
 		if data_json['command'] == 'join':
-			# TODO: Not really sure if we're supposed to do anything here
-			pass
+			clients.update({address: None})
+			print('clients:', clients)
 
 		elif data_json['command'] == 'register':
 			clients.update({address: data_json['handle']})
