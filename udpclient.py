@@ -13,7 +13,7 @@ client.bind(('localhost', random.randint(8000, 9000)))
 
 class MBSClientShell(Cmd):
     prompt = ''
-    intro = 'Welcome to the CSNETWK Message Board System.\nType /help or /? to list commands.\n'
+    intro = '\nWelcome to the CSNETWK Message Board System.\nType /help or /? to list commands.\n\nTo exit the program, enter /quit.\n'
     
     server_address = ()
     handle = ''
