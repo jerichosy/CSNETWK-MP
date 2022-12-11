@@ -108,6 +108,10 @@ while True:
 			server.sendto(response.encode(), address)
 			
 		elif data_json['command'] == 'all':
+			# Note: Unlike 'msg' where the sender can only send to registered clients, 
+			# 		'all' will the sender can send to all clients (including unregistered clients)
+			#       This behavior is okay.
+
 			print('destination_addr:', "ALL")
 			source_handle = clients.get(address)
 			print('source_handle:', source_handle)
