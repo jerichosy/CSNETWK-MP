@@ -20,7 +20,7 @@ while True:
 	print('received %s bytes from %s' % (len(data), address))
 	print(data)
 	
-	# TODO: comment out after done debugging client
+	# echo for debug
 	# sent = server.sendto(data, address)
 	# print('sent %s bytes back to %s' % (sent, address))
 
@@ -104,5 +104,5 @@ while True:
 			server.sendto(response.encode(), destination_addr)
 
 			# inform sender of success
-			response = json.dumps({'info': f"[To {destination_handle}]: {data_json['message']}"}) #FIXME:
+			response = json.dumps({'info': f"[To {destination_handle}]: {data_json['message']}"})
 			server.sendto(response.encode(), address)

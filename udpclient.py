@@ -146,7 +146,8 @@ class MBSClientShell(Cmd):
     # def do_test(self, arg: str) -> None:
     #     print("test")
 
-    def do_quit(self, arg: None) -> None:
+    # This is necessary because CTRL+C will not interrupt recvfrom() at least on Windows.
+    def do_quit(self, arg: None) -> None:  # This is necessary 
         # close socket
         client.close()
         
