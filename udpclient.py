@@ -187,9 +187,6 @@ class MBSClientShell(Cmd):
         request = json.dumps({'command': 'all', 'message': message})
         client.sendto(request.encode(), self.server_address)
 
-    # Do not remove this command
-    # def do_test(self, arg: None) -> None:
-    #     print("test")
 
     # This is necessary because CTRL+C will not interrupt recvfrom() at least on Windows.
     def do_quit(self, arg: None) -> None:  # This is necessary 
