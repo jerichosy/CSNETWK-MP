@@ -22,6 +22,8 @@ class MBSClientShell(Cmd):
     # That's because recvfrom() is blocking. If we run it in the main thread, the program will not be able to accept user input.
     def _receive(self):
         while True:
+            # Note: Modifying outside variables in this thread may not be thread-safe.
+
             # print('waiting to receive message')
             data, address = client.recvfrom(1024)
             
