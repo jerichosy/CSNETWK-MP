@@ -79,7 +79,7 @@ class MBSClientShell(Cmd):
             return
 
         # Command specific error checking
-        if self.server_address:  # FIXME: CONSIDER MOVING TO SERVER
+        if self.server_address:
             print("Error: Already connected to server")
             return            
         
@@ -89,12 +89,8 @@ class MBSClientShell(Cmd):
             print("Error: Invalid port number")
             return
 
-        # connect to server
-        # print('joining %s port %s' % self.server_address)
         request = json.dumps({'command': 'join'})
         client.sendto(request.encode(), self.server_address)
-
-        # TODO: There's no check whether the dest. address is valid. But recvfrom() will complain if it's not.
 
         try:
             data, _ = client.recvfrom(1024)
@@ -103,8 +99,8 @@ class MBSClientShell(Cmd):
             print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
             return
         
-        # Assuming joined anyway
         # print('Connection to the Message Board Server is successful!')
+
         response = json.loads(data.decode())
         info = response.get('info')
         print(info)
@@ -119,16 +115,13 @@ class MBSClientShell(Cmd):
             return
 
         # Command specific error checking
-        if not self.server_address:  # FIXME: CONSIDER MOVING TO SERVER
+        if not self.server_address:
             print("Error: Not connected to server. Use '/join <ip> <port>'")
             return
 
         # Send data
         request = json.dumps({'command': 'register', 'handle': arg})
         client.sendto(request.encode(), self.server_address)
-
-        # TODO: Handle duplicate checking (either re-prompt or auto-generate new handle)
-        # response = client.recvfrom(1024)
 
     def do_msg(self, arg: str) -> None:
         # Basic error checking
@@ -137,7 +130,7 @@ class MBSClientShell(Cmd):
             return
 
         # Command specific error checking
-        if not self.server_address:  # FIXME: CONSIDER MOVING TO SERVER 
+        if not self.server_address:
             # This being the 2nd error check is okay
             print("Error: Not connected to server. Use '/join <ip> <port>'")
             return
