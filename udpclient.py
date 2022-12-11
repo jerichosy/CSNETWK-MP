@@ -17,6 +17,34 @@ class MBSClientShell(Cmd):
     
     server_address = ()
 
+    # Normally, recvfrom() is expected to be after sendto().
+    # However, because we may receive messages at any time, not just after sending data, we need to run it in a separate thread.
+    # That's because recvfrom() is blocking. If we run it in the main thread, the program will not be able to accept user input.
+    def _receive(self):
+        while True:
+            # print('waiting to receive message')
+            data, address = client.recvfrom(1024)
+            
+            # print('received %s bytes from %s' % (len(data), address))
+            # print(data.decode())
+
+            # Expect JSON
+            response = json.loads(data.decode())
+            # print(response)
+
+            # If error received, print it and continue
+            error, info = response.get('error'), response.get('info')
+            if error:
+                print(f"Error: {error}")
+                continue
+            if info:
+                print(info)
+                continue
+                
+            # Process receive chain of the commands
+            if response['command'] == 'msg':
+                print(f"[From {response['handle']}]: {response['message']}")
+
     def validate_command(self, command_args: str, required_arg_count: int) -> bool:
         split = command_args.split(maxsplit=1)
         if not split:
@@ -67,9 +95,22 @@ class MBSClientShell(Cmd):
         client.sendto(request.encode(), self.server_address)
 
         # TODO: There's no check whether the dest. address is valid. But recvfrom() will complain if it's not.
+
+        try:
+            data, _ = client.recvfrom(1024)
+        except ConnectionResetError:
+            self.server_address = ()
+            print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
+            return
         
         # Assuming joined anyway
-        print('Connection to the Message Board Server is successful!')
+        # print('Connection to the Message Board Server is successful!')
+        response = json.loads(data.decode())
+        info = response.get('info')
+        print(info)
+
+        t = threading.Thread(target=self._receive)
+        t.start()
 
     def do_register(self, arg: str) -> None:
         # Basic error checking
@@ -120,37 +161,8 @@ class MBSClientShell(Cmd):
 
         # exit program
         sys.exit()
- 
-
-# Normally, recvfrom() is expected to be after sendto().
-# However, because we may receive messages at any time, not just after sending data, we need to run it in a separate thread.
-# That's because recvfrom() is blocking. If we run it in the main thread, the program will not be able to accept user input.
-def receive():
-    while True:
-        # print('waiting to receive message')
-        data, address = client.recvfrom(1024)
-        
-        # print('received %s bytes from %s' % (len(data), address))
-        # print(data.decode())
-
-        # Expect JSON
-        response = json.loads(data.decode())
-        # print(response)
-
-        # If error received, print it and continue
-        error, info = response.get('error'), response.get('info')
-        if error:
-            print(f"Error: {error}")
-            continue
-        if info:
-            print(info)
-            continue
-            
-        # Process receive chain of the commands
-        if response['command'] == 'msg':
-            print(f"[From {response['handle']}]: {response['message']}")
 
  
-t = threading.Thread(target=receive)
-t.start()
+# t = threading.Thread(target=receive)
+# t.start()
 MBSClientShell().cmdloop()

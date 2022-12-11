@@ -38,6 +38,10 @@ while True:
 			clients.update({address: None})
 			print('clients:', clients)
 
+			# inform sender of success
+			response = json.dumps({'info': 'Connection to the Message Board Server is successful! Please register.'})
+			server.sendto(response.encode(), address)
+
 		elif data_json['command'] == 'register':
 			handle = data_json['handle']
 
