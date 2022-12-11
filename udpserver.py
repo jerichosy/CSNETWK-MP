@@ -11,7 +11,7 @@ SERVER_ADDRESS = ('localhost', 9999)
 print('starting up on %s port %s' % SERVER_ADDRESS)
 server.bind(SERVER_ADDRESS)
 
-clients = {}  # {handle: address}
+clients = {}  # {address: handle}
 
 while True:
 	print('waiting to receive message')
@@ -37,15 +37,18 @@ while True:
 			pass
 
 		elif data_json['command'] == 'register':
-			clients.update({data_json['handle']: address})
+			clients.update({address: data_json['handle']})
 			print('clients:', clients)
 
 		elif data_json['command'] == 'msg':
 			destination_handle = data_json['handle']
 			print('destination_handle:', destination_handle)
-			destination_addr = clients.get(destination_handle)
+			try:
+				destination_addr = list(clients.keys())[list(clients.values()).index(destination_handle)]
+			except ValueError:
+				destination_addr = None
 			print('destination_addr:', destination_addr)
-			source_handle = list(clients.keys())[list(clients.values()).index(address)]
+			source_handle = clients.get(address)
 			print('source_handle:', source_handle)
 
 			# error check if handle exists
