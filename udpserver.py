@@ -44,6 +44,11 @@ while True:
 			server.sendto(response.encode(), address)
 
 		elif data_json['command'] == 'leave':
+			# broadcast to all clients
+			response = json.dumps({'command': 'info', 'message': f'{handle} left the chat'}).encode() #pre
+			for client in clients:
+					server.sendto(response, client)
+
 			# update clients
 			clients.pop(address)  # will remove regardless of whether handle is registered
 			print('clients:', clients)
@@ -73,6 +78,11 @@ while True:
 			# update clients
 			clients.update({address: handle})
 			print('clients:', clients)
+
+			# broadcast to all clients
+			response = json.dumps({'command': 'info', 'message': f'{handle} joined the chat'}).encode() #pre-encode response
+			for client_address in clients:
+				server.sendto(response, client_address)
 
 			# inform sender of success
 			response = json.dumps({'command': 'info', 'message': f"Welcome {handle}!"})
@@ -128,8 +138,7 @@ while True:
 
 			# change handle to source handle and send to All destinations
 			data_json.update({'handle': source_handle})
-			response = json.dumps(data_json)
-			response = response.encode() #pre-encode response
+			response = json.dumps(data_json).encode() #pre-encode response
 			for client_address in clients:
 				server.sendto(response, client_address)
 
