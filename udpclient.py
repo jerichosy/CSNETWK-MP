@@ -147,6 +147,18 @@ class MBSClientShell(Cmd):
         request = json.dumps({'command': 'register', 'handle': arg})
         client.sendto(request.encode(), self.server_address)
 
+    def do_list(self, arg: None) -> None:
+        """    List all handles registered with the Message Board Server\n    Syntax: /list"""
+
+        # Command specific error checking
+        if not self.server_address:
+            print("Error: Not connected to server. Use '/join <ip> <port>'")
+            return
+
+        # Send data
+        request = json.dumps({'command': 'list'})
+        client.sendto(request.encode(), self.server_address)
+
     def do_msg(self, arg: str) -> None:
         """    Send a message to a specific handle\n    Syntax: /msg <handle> <message>"""
 

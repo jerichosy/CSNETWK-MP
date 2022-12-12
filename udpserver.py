@@ -97,6 +97,14 @@ while True:
 			server.sendto(response.encode(), address)
 			continue
 
+		elif data_json['command'] == 'list':
+			# get list of handles
+			handle_list = list(clients.values())
+			
+			# send list of handles
+			response = json.dumps({'command': 'info', 'message': f"List of users: {', '.join(handle_list)}"})
+			server.sendto(response.encode(), address)
+
 		elif data_json['command'] == 'msg':
 			# Note: Allow the sender to send a message to themselves
 
